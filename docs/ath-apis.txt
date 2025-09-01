@@ -1,0 +1,246 @@
+Listing the current jobs on the queue
+URL	/api/ath/queue
+Method	GET
+Request Body	-
+Request Fields	-
+Response Body	[
+    {
+        "uid": "2b7da979-340d-42ba-9aae-e0d8f27192c3",
+        "file": "filewatcher/HB-ATH/received/ATH_1.csv",
+        "status": "COMPLETE",
+        "service": "HB-ATH",
+        "reference": "filewatcher-ATH_1.csv",
+        "reportingEnabled": true,
+        "timings": {
+            "submitted": 1752543829430,
+            "started": 1752543833093,
+            "completed": 1752543835377,
+            "callsCompleted": 1752543834328,
+            "callsElapsed": 1235,
+            "postProcessElapsed": 1049,
+            "totalElapsed": 2284
+        },
+        "recordsTotal": 9,
+        "recordsProcessed": 9,
+        "output": {
+            "raw": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.raw.csv",
+            "results": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.csv",
+            "summaryReport": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.html",
+            "fullReport": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.zip",
+            "controlReport": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.control.json"
+        }
+    },
+    {
+        "uid": "f35daeb1-24f0-4c92-8b43-6d36b4dfc975",
+        "file": "filewatcher/HB-ATH/received/ATH_2.csv",
+        "status": "REPORTING",
+        "service": "HB-ATH",
+        "reference": "filewatcher-ATH_2.csv",
+        "reportingEnabled": true,
+        "timings": {
+            "submitted": 1752543843433,
+            "started": 1752543848096,
+            "completed": 0,
+            "callsCompleted": 1752543849327,
+            "callsElapsed": 1231
+        },
+        "recordsTotal": 9,
+        "recordsProcessed": 9
+    }
+]
+Response Fields	Array of jobs - job definition in next section
+View a specific job
+URL	
+/api/ath/queue/:uid
+
+:uid - Unique id / uuid of the job
+Method	GET
+Request Body	-
+Request Fields	-
+Response Body	
+Complete job
+
+    {
+        "uid": "2b7da979-340d-42ba-9aae-e0d8f27192c3",
+        "file": "filewatcher/ATH/received/ATH_1.csv",
+        "status": "COMPLETE",
+        "service": "ATH",
+        "reference": "filewatcher-ATH_1.csv",
+        "reportingEnabled": true,
+        "timings": {
+            "submitted": 1752543829430,
+            "started": 1752543833093,
+            "completed": 1752543835377,
+            "callsCompleted": 1752543834328,
+            "callsElapsed": 1235,
+            "postProcessElapsed": 1049,
+            "totalElapsed": 2284
+        },
+        "recordsTotal": 9,
+        "recordsProcessed": 9,
+        "output": {
+            "raw": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.raw.csv",
+            "results": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.csv",
+            "summaryReport": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.html",
+            "fullReport": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.zip",
+            "controlReport": "/opt/powercurve/test-proxy/output/HB-ATH/ATH_1_2b7da979-340d-42ba-9aae-e0d8f27192c3.control.json"
+        }
+    }
+
+Processing job
+
+    {
+        "uid": "4b717373-fb9a-4879-80b9-9a4efde2d0f6",
+        "file": "filewatcher/ATH/received/ATH_3.csv",
+        "status": "PROCESSING",
+        "service": "ATH",
+        "reference": "filewatcher-ATH_3.csv",
+        "reportingEnabled": true,
+        "timings": {
+            "submitted": 1752543917478,
+            "started": 1752543918110,
+            "completed": 0
+        },
+        "lastRecordWritten": 75,
+        "lastRecordProcessed": 77,
+        "recordsTotal": 100,
+        "recordsProcessed": 75,
+        "progress": 75,
+        "remaining": 1405,
+        "eta": "2025-07-15T01:45:23.731Z",
+        "etaString": "7/15/2025, 11:45:23 AM"
+    }
+
+Response Fields	
+uid - unique id of the submitted job
+file - confirmation of the processed file name
+status - status of the job
+service - name of the service as passed in request
+reference - reference as passed in request
+reportingEnabled - true if test reporting is enabled for this service, false otherwise
+timings.submitted - timestamp of file submission
+timings.started - timestamp of file processing start
+timings.completed - timestamp of full process completion (calls + reporting)
+timings.callsCompleted - timestamp of completion for all service calls, prior to reporting
+timings.callElapsed - time taken to process all calls, in milliseconds
+timings.postProcessElapsed - time taken to run post-processing, including csv generation and reporting
+timings.totalElapsed - time taken to complete full execution (calls + post process), in milliseconds
+recordsTotal - total number of records read in input file
+recordsProcessed - number of records already processed from the request file
+output.raw - path to the raw results of the batch process (raw request, raw response, raw test results)
+output.results - path to the full delimited results of the batch process
+output.summaryReport - path to the summary report of execution, including batch information and testing results
+output.fullReport - path to the full details report of execution, including summary and per-test-case results 
+output.controlReport - path to the file containing this control report 
+Additional data for jobs in processing stage
+
+progress - progress percentage for all service calls, note this doesn't include the reporting stage
+remaining - estimated time remaining before all calls are complete (excluding reporting)
+eta - iso datetime representing estimated time of completion for all calls (excluding reporting)
+etaString - locale-based representation of the iso datetime above 
+lastRecordProcessed / lastRecordWritten - reader/writer synchronisation counters
+Submit a job
+Only the path to the file to execute is passed in the api call, the file must thus have first been transferred to a location accessible to the tool before submitting the call
+
+
+
+URL	
+/api/ath/submit
+
+Method	POST
+Request Body	
+{
+    "service": "CAP",
+    "file": "/var/data/sandbox/CAP_100.csv",
+    "reference": "My test file"
+} 
+
+Request Fields	
+service - name of the service to call, must match one of the defined services in the "config" folder
+file - location of the file to execute. Use an absolute path where possible as the root for a relative path depends on configuration
+reference - a custom reference that can be passed and that will be displayed in the queue details
+Response Body	
+{
+    "uid": "8cc17abd-6f51-48ab-9890-2cc533b23543",
+    "file": "/var/data/sandbox/CAP_100.csv",
+    "status": "PENDING",
+    "service": "CAP",
+    "reference": "Test file submission",
+    "reportingEnabled": true,
+    "timings": {
+        "submitted": 1709624896438,
+        "started": 0,
+        "completed": 0
+    }
+}
+
+Response Fields	
+Reference "view job" details
+
+Canceling a job
+URL	
+/api/ath/cancel
+
+Method	POST
+Request Body	
+{
+    "uid": "042768a8-105a-4b56-a8bd-3a6192bd94db"
+}
+
+Request Fields	
+uid - unique id of the job to cancel, as obtained during a submit call or from the processing queue
+Response Body	
+{
+    "uid": "f301eef6-bcb5-4b49-8c35-ffc54cd36808",
+    "file": "filewatcher/ATH/E1_ATHINPUT.1k.csv",
+    "status": "ABORTING",
+    "service": "ATH",
+    "reference": "Test file submission",
+    "reportingEnabled": true,
+    "timings": {
+        "submitted": 1752545327434,
+        "started": 1752545328375,
+        "completed": 0
+    },
+    "lastRecordWritten": 198,
+    "lastRecordProcessed": 200,
+    "recordsProcessed": 198,
+    "recordsTotal": 999,
+    "progress": 19,
+    "remaining": 42247,
+    "eta": "2025-07-15T02:09:41.065Z",
+    "etaString": "7/15/2025, 12:09:41 PM"
+}
+
+Response Fields	
+Reference "view job" details
+
+Clearing the queue
+This will remove all jobs that are safe to remove from the queue, make sure that you've identified any job you need results for before calling this service. Note that this will only delete the job from the queue, and will not delete any existing results data on disk.
+
+In most cases, calls to this api shouldn't be required as the tool will automatically manage the queue and remove completed job after a configurable amount of time (an hour by default) 
+
+URL	
+/api/ath/queue/clear?removePending=:pending
+
+pending - boolean flag
+false - remove only completed/canceled/failed jobs
+true - keep only currently processing jobs by removing the above as well as pending jobs
+Method	DELETE
+Request Body	
+-
+
+Request Fields	-
+Response Body	
+{
+    "removed": [
+        "6295a943-b020-4453-b903-2e12bb605f1e"
+    ],
+    "remaining": [
+        "eb3127d6-b603-4a63-82a6-fcb6009dee79"
+    ]
+}
+
+Response Fields	
+removed - array of uids indicating all jobs removed from the queue
+remaining - array of uids indicating all jobs remaining on the queue after clearing
