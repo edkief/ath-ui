@@ -36,12 +36,21 @@ const JobDetails = () => {
     }
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Path copied to clipboard!');
-    }).catch(() => {
-      alert('Failed to copy to clipboard. Please copy manually.');
-    });
+  const downloadFile = (filePath: string) => {
+    // Extract filename from the full path
+    const filename = filePath.split('/').pop() || filePath.split('\\').pop() || '';
+    
+    // Construct download URL using config
+    const downloadUrl = `${config.api.baseUrl}/html/results/${job.service}/${filename}`;
+    
+    // Create temporary anchor element to trigger download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = filename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (isLoading) {
@@ -218,11 +227,31 @@ const JobDetails = () => {
       {job.status === 'COMPLETE' && job.output && (
         <div className="card">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Results & Output Files</h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-6">
             Your job has completed successfully. Below are the server paths for all available output files.
           </p>
           
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Full Report - Highlighted and Featured */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-lg p-6 shadow-lg">
+              <div className="flex items-center space-x-3 mb-4">
+                <span className="text-2xl">📊</span>
+                <h3 className="text-lg font-semibold text-blue-900">Testing Report</h3>
+              </div>
+              <div className="flex items-center space-x-2">
+                <code className="flex-1 text-sm bg-white border border-blue-200 p-3 rounded break-all shadow-sm">
+                  {job.output.fullReport}
+                </code>
+                <button
+                  onClick={() => downloadFile(job.output!.fullReport)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+
+            {/* Other Files */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="border border-gray-200 rounded-lg p-4">
                 <h3 className="font-medium text-gray-900 mb-2">Raw Results</h3>
@@ -231,10 +260,10 @@ const JobDetails = () => {
                     {job.output.raw}
                   </code>
                   <button
-                    onClick={() => copyToClipboard(job.output!.raw)}
+                    onClick={() => downloadFile(job.output!.raw)}
                     className="btn-secondary text-xs px-2 py-1"
                   >
-                    Copy
+                    Download
                   </button>
                 </div>
               </div>
@@ -246,10 +275,10 @@ const JobDetails = () => {
                     {job.output.results}
                   </code>
                   <button
-                    onClick={() => copyToClipboard(job.output!.results)}
+                    onClick={() => downloadFile(job.output!.results)}
                     className="btn-secondary text-xs px-2 py-1"
                   >
-                    Copy
+                    Download
                   </button>
                 </div>
               </div>
@@ -261,31 +290,15 @@ const JobDetails = () => {
                     {job.output.summaryReport}
                   </code>
                   <button
-                    onClick={() => copyToClipboard(job.output!.summaryReport)}
+                    onClick={() => downloadFile(job.output!.summaryReport)}
                     className="btn-secondary text-xs px-2 py-1"
                   >
-                    Copy
+                    Download
                   </button>
                 </div>
               </div>
 
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 mb-2">Full Report</h3>
-                <div className="flex items-center space-x-2">
-                  <code className="flex-1 text-sm bg-gray-100 p-2 rounded break-all">
-                    {job.output.fullReport}
-                  </code>
-                  <button
-                    onClick={() => copyToClipboard(job.output!.fullReport)}
-                    className="btn-secondary text-xs px-2 py-1"
-                  >
-                    Copy
-                  </button>
-                </div>
-              </div>
-            </div>
-
-                          {job.output.controlReport && (
+              {job.output.controlReport && (
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h3 className="font-medium text-gray-900 mb-2">Control Report</h3>
                   <div className="flex items-center space-x-2">
@@ -293,20 +306,21 @@ const JobDetails = () => {
                       {job.output.controlReport}
                     </code>
                     <button
-                      onClick={() => copyToClipboard(job.output!.controlReport!)}
+                      onClick={() => downloadFile(job.output!.controlReport!)}
                       className="btn-secondary text-xs px-2 py-1"
                     >
-                      Copy
+                      Download
                     </button>
                   </div>
                 </div>
               )}
+            </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h3 className="font-medium text-blue-900 mb-2">📋 Note</h3>
               <p className="text-blue-800 text-sm">
-                These are server file paths. In the future, direct download links will be available here.
-                For now, you can copy these paths to access the files on the server.
+                Click the "Download" button next to each file to download it directly from the server.
+                The file paths shown are the server locations for reference.
               </p>
             </div>
           </div>
